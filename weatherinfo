@@ -7,7 +7,7 @@ import requests
 
 class WeatherInfo:
     def __init__(self, lat, lon):
-        self.api_token = '6b16fbfe1252926f536b7f2c87ef6573'
+        self.api_token = weather_token #please add weather api key token
         self.latittude = lat
         self.longitude = lon
 
