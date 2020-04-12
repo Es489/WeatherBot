@@ -9,7 +9,7 @@ class TelegramWeatherBot:
     def __init__(self):
         self.LANG,self.LOC = range(2)
         token = bot_token #please add bot token key
-        # url = "https://api.telegram.org/bot{0}/".format(token)
+       
 
         updater = Updater(token=token, use_context=True)
         #updater.dispatcher.add_handler(CommandHandler("start", self.start))
