@@ -1,0 +1,62 @@
+
+from datetime import datetime
+
+
+import requests
+
+
+class WeatherInfo:
+    def __init__(self, lat, lon):
+        self.api_token = '6b16fbfe1252926f536b7f2c87ef6573'
+        self.latittude = lat
+        self.longitude = lon
+
+    def get_current_weather(self,lang):
+        params = dict(lat=self.latittude, lon=self.longitude, appid=self.api_token, units='metric', lang=lang)
+        url = 'http://api.openweathermap.org/data/2.5/weather'
+        info = requests.get(url, params=params)
+        main_tags = [info.json()['weather'][0]['description'],info.json()["main"]["temp"], info.json()["main"]["feels_like"], info.json()["main"]["pressure"],info.json()["main"]["humidity"]]
+        result_ru = 'Осадки - {0} \nТемпература {1} \nОщущается как {2} \nДавление {3} мм рт.ст. \nВлажность {4}%'.format(main_tags[0],main_tags[1],main_tags[2],main_tags[3],main_tags[4])
+        result_en = 'Weather condition - {0}\nTemperature {1}\nFeels like {2}\nPressure {3} hPa\nHumidity {4}%'.format(main_tags[0],main_tags[1],main_tags[2],main_tags[3],main_tags[4])
+        if lang=="ru":
+            return result_ru
+        else:
+            return result_en
+
+    def get_weather_forecast(self,lang):
+        params = dict(lat=self.latittude, lon=self.longitude, appid=self.api_token, units='metric', lang=lang)
+        url = 'http://api.openweathermap.org/data/2.5/forecast'
+
+        info = requests.get(url, params=params)
+        print(info.json())
+        daily_info = info.json()["list"]
+        result =""
+
+        for i in daily_info:
+
+            date = datetime.utcfromtimestamp(i["dt"]).strftime("%d-%m-%Y %H:%M:%S")
+            main_tags = [date, i['weather'][0]['description'], i["main"]["temp"],
+                         i["main"]["feels_like"], i["main"]["pressure"],
+                         i["main"]["humidity"]]
+            if lang=="ru":
+                result+= '{0}\nОсадки - {1}\nТемпература {2}\nОщущается как {3}\nДавление {4} мм рт.ст.\nВлажность {5}%\n\n'.format(main_tags[0],main_tags[1], main_tags[2], main_tags[3], main_tags[4], main_tags[5])
+            else:
+                result+= '{0}\nWeather condition - {1}\nTemperature {2}\nFeels like {3}\nPressure {4} hPa\nHumidity {5}%\n\n'.format(main_tags[0], main_tags[1], main_tags[2], main_tags[3], main_tags[4], main_tags[5])
+        return result
+
+    def what_to_wear(self, temp, cond):
+        result=""
+        return result
+
+
+    def set_lang(self, lang):
+        self.lang = lang
+
+    def set_lat(self, n):
+        self.lattitude = n
+
+    def set_long(self, n):
+        self.longitute = n
+
+
+
