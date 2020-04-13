@@ -7,30 +7,16 @@ from weatherInfo import WeatherInfo
 
 class TelegramWeatherBot:
     def __init__(self):
-        self.LANG,self.LOC = range(2)
+        
         token = bot_token #please add bot token key
-       
-
         updater = Updater(token=token, use_context=True)
-        #updater.dispatcher.add_handler(CommandHandler("start", self.start))
+        updater.dispatcher.add_handler(CommandHandler("start", self.start))
         updater.dispatcher.add_handler(MessageHandler(Filters.location, self.location))
-        updater.dispatcher.add_handler(CallbackQueryHandler(self.language_handler))
-        updater.dispatcher.add_handler(CallbackQueryHandler(self.weather_handler))
-        conv_handler = ConversationHandler(
-            entry_points=[CommandHandler('start', self.start)],
-
-            states={
-
-                self.LANG: [CallbackQueryHandler(self.language_handler)],
-
-                self.LOC: [CallbackQueryHandler(self.weather_handler)],
-
-            },
-            fallbacks=[CommandHandler('cancel', self.cancel)]
-        )
-        updater.dispatcher.add_handler(conv_handler)
+        updater.dispatcher.add_handler(CallbackQueryHandler(self.language_handler, pattern='ru'))
+        updater.dispatcher.add_handler(CallbackQueryHandler(self.language_handler, pattern='en'))
+        updater.dispatcher.add_handler(CallbackQueryHandler(self.weather_handler, pattern='current'))
+        updater.dispatcher.add_handler(CallbackQueryHandler(self.weather_handler, pattern='forecast'))
         updater.start_polling()
-
         updater.idle()
 
     def start(self, update, context):
@@ -42,13 +28,13 @@ class TelegramWeatherBot:
         self.language(update, context)
 
 
-    def cancel(self, update, context):
-        return ConversationHandler.END
 
     def request_location(self, update, context):
-        print("location requested")
+        print("location requested", context.user_data["lang"], context.user_data["choice"])
         lb = ""
         message = ""
+        if context.user_data["lang"]==[]:
+            print("no language")
         if context.user_data["lang"] == "ru":
             lb = "Поделится местоположением"
             message = "Пожалуйста поделитесь своим местоположением для прогноза"
@@ -76,15 +62,16 @@ class TelegramWeatherBot:
         forecast_button = telegram.InlineKeyboardButton(text=b2, callback_data="forecast")
         markup = telegram.InlineKeyboardMarkup([[current_button, forecast_button]])
         update.message.reply_text(text=message, reply_markup=markup)
-        return self.LOC
+
+
 
     def location(self, update, context):
 
         lat, long = update.message.location["latitude"], update.message.location["longitude"]
         weather = WeatherInfo(lat, long)
-
+        print("location recieved", context.user_data["lang"], context.user_data["choice"])
         if context.user_data == {}:
-            c_info = weather.get_current_weather(context.user_data["lang"])
+            c_info = weather.get_current_weather("ru")
             update.message.reply_text(text=c_info)
 
         if context.user_data["choice"] == "current":
@@ -104,8 +91,9 @@ class TelegramWeatherBot:
     def weather_handler(self, update, context):
         query = update.callback_query
 
-        print("requesting location", query.data)
+
         context.user_data["choice"] = query.data
+        print("requesting location", context.user_data)
         self.request_location(query, context)
 
     def language(self, update, context):
@@ -113,8 +101,7 @@ class TelegramWeatherBot:
         en_button = telegram.InlineKeyboardButton(text="English", callback_data="en")
         markup = telegram.InlineKeyboardMarkup([[rus_button, en_button]])
         update.message.reply_text(text='Choose language/Выберите язык',
-                                  reply_markup=markup)
-
+                                  reply_markup=markup, callback_data = "language")
 
 
 if "__main__" == __name__:
