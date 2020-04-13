@@ -64,6 +64,9 @@ class TelegramWeatherBot:
         update.message.reply_text(text=message, reply_markup=markup)
 
 
+"""Process user location and send a message to user with requested weather forecast option.
+By default (if no information regarding users choice of langiage or preffered forecast oftion is given) 
+would give current weather forecast in Russian """"
 
     def location(self, update, context):
 
