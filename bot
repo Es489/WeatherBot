@@ -18,7 +18,10 @@ class TelegramWeatherBot:
         updater.dispatcher.add_handler(CallbackQueryHandler(self.weather_handler, pattern='forecast'))
         updater.start_polling()
         updater.idle()
-
+        
+""" /start command handler.
+User recives a greeting gif file with message with language options to choose from. 
+"""
     def start(self, update, context):
         memes = requests.get("https://api.giphy.com/v1/gifs/random?api_key=yQAwtUvFqEssA546ensQFTUpMEGKOMa5",
                              params=dict(tag="hello", rating="G"))
@@ -28,9 +31,10 @@ class TelegramWeatherBot:
         self.language(update, context)
 
 
+"""Requests user location """
 
     def request_location(self, update, context):
-        print("location requested", context.user_data["lang"], context.user_data["choice"])
+        
         lb = ""
         message = ""
         if context.user_data["lang"]==[]:
@@ -72,7 +76,7 @@ would give current weather forecast in Russian """"
 
         lat, long = update.message.location["latitude"], update.message.location["longitude"]
         weather = WeatherInfo(lat, long)
-        print("location recieved", context.user_data["lang"], context.user_data["choice"])
+       
         if context.user_data == {}:
             c_info = weather.get_current_weather("ru")
             update.message.reply_text(text=c_info)
@@ -86,7 +90,7 @@ would give current weather forecast in Russian """"
 
     def language_handler(self, update, context):
         query = update.callback_query
-        print(query.data)
+        
 
         context.user_data["lang"] = query.data
         self.options(query, context)
@@ -96,7 +100,7 @@ would give current weather forecast in Russian """"
 
 
         context.user_data["choice"] = query.data
-        print("requesting location", context.user_data)
+        
         self.request_location(query, context)
 
     def language(self, update, context):
