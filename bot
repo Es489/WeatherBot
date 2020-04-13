@@ -1,7 +1,6 @@
 import requests
 import telegram
-from telegram.ext import Filters, Updater, MessageHandler, CallbackQueryHandler, CommandHandler, InlineQueryHandler, \
-    ConversationHandler
+from telegram.ext import Filters, Updater, MessageHandler, CallbackQueryHandler, CommandHandler
 from weatherInfo import WeatherInfo
 
 
@@ -19,9 +18,9 @@ class TelegramWeatherBot:
         updater.start_polling()
         updater.idle()
         
-""" /start command handler.
-User recives a greeting gif file with message with language options to choose from. 
-"""
+    """ /start command handler.
+        User recives a greeting gif file with message with language options to choose from. 
+    """
     def start(self, update, context):
         memes = requests.get("https://api.giphy.com/v1/gifs/random?api_key=yQAwtUvFqEssA546ensQFTUpMEGKOMa5",
                              params=dict(tag="hello", rating="G"))
@@ -31,7 +30,7 @@ User recives a greeting gif file with message with language options to choose fr
         self.language(update, context)
 
 
-"""Requests user location """
+    """Requests user location """
 
     def request_location(self, update, context):
         
@@ -68,9 +67,9 @@ User recives a greeting gif file with message with language options to choose fr
         update.message.reply_text(text=message, reply_markup=markup)
 
 
-"""Process user location and send a message to user with requested weather forecast option.
-By default (if no information regarding users choice of langiage or preffered forecast oftion is given) 
-would give current weather forecast in Russian """"
+    """Process user location and send a message to user with requested weather forecast option.
+    By default (if no information regarding users choice of langiage or preffered forecast oftion is given) 
+    would give current weather forecast in Russian """"
 
     def location(self, update, context):
 
@@ -111,5 +110,5 @@ would give current weather forecast in Russian """"
                                   reply_markup=markup, callback_data = "language")
 
 
-if "__main__" == __name__:
-    bot = TelegramWeatherBot()
+#if "__main__" == __name__:
+    #bot = TelegramWeatherBot()
