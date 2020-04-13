@@ -79,7 +79,7 @@ class TelegramWeatherBot:
             update.message.reply_text(text=c_info)
         elif context.user_data["choice"] == "forecast":
             f_info = weather.get_weather_forecast(context.user_data["lang"])
-            update.message.reply_text(text=f_info)
+            update.message.reply_text(text=f_info[700])
 
     def language_handler(self, update, context):
         query = update.callback_query
