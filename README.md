@@ -22,5 +22,6 @@ Telegram chatbot
   python3 main.py
 ## Демо
 
-Краткое демо работы чат бота [Демо]()
+Краткое демо работы чат бота [Демо](https://github.com/Es489/WeatherBot/blob/master/weatherbotdemo.MP4)
+Нужно скачать файл
 
