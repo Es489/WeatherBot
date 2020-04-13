@@ -21,7 +21,7 @@ class TelegramWeatherBot:
 
     def start(self, update, context):
         memes = requests.get("https://api.giphy.com/v1/gifs/random?api_key=yQAwtUvFqEssA546ensQFTUpMEGKOMa5",
-                             params=dict(tag="snow", rating="G"))
+                             params=dict(tag="hello", rating="G"))
         update.message.reply_document(memes.json()["data"]["image_mp4_url"])
 
         context.user_data["id"] = update.message.chat_id
