@@ -36,8 +36,7 @@ class TelegramWeatherBot:
         
         lb = ""
         message = ""
-        if context.user_data["lang"]==[]:
-            print("no language")
+        
         if context.user_data["lang"] == "ru":
             lb = "Поделится местоположением"
             message = "Пожалуйста поделитесь своим местоположением для прогноза"
